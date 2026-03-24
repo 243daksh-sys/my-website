@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chilli Leaf Disease AI</title>
-    <!-- Use Google Fonts -->
+    <title>Daksh | Portfolio</title>
+    <!-- Google Fonts for Dark Souls Vibe -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #10b981;
-            --primary-hover: #059669;
-            --secondary: #3b82f6;
-            --bg-gradient-start: #0f172a;
-            --bg-gradient-end: #1e293b;
-            --glass-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --error: #ef4444;
+            --ds-bg-dark: #0a0a0a;
+            --ds-bg-light: #1c1816;
+            --ds-ember: #e25822;         /* Fire/Ember orange */
+            --ds-ember-glow: #ff7b00;  
+            --ds-gold: #cbb581;          /* Tarnished gold */
+            --ds-gold-dim: #8b7952;
+            --ds-text: #d4d4d4;          /* Ash white */
+            --ds-text-dim: #8a8a8a;
+            --ds-border: rgba(203, 181, 129, 0.2);
+            --ds-panel: rgba(20, 18, 17, 0.85);
+
             --success: #22c55e;
             --warning: #f59e0b;
+            --danger: #ef4444;
         }
 
         * {
@@ -32,447 +35,742 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-            color: var(--text-main);
+            background-color: var(--ds-bg-dark);
+            color: var(--ds-text);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            overflow-x: hidden;
+            overflow: hidden; /* Hide scroll for SPA full sections */
             position: relative;
+            line-height: 1.6;
         }
 
-        /* Abstract Background Elements */
-        .bg-shape {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
+        /* Ember Canvas Background */
+        #embers-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: 0;
-            opacity: 0.5;
-            animation: float 20s ease-in-out infinite;
-        }
-        
-        .shape-1 {
-            width: 400px;
-            height: 400px;
-            background: rgba(16, 185, 129, 0.2);
-            top: -10%;
-            left: -10%;
+            pointer-events: none;
+            background: radial-gradient(circle at center, var(--ds-bg-light) 0%, var(--ds-bg-dark) 100%);
         }
 
-        .shape-2 {
-            width: 500px;
-            height: 500px;
-            background: rgba(59, 130, 246, 0.2);
-            bottom: -20%;
-            right: -10%;
-            animation-delay: -10s;
+        /* Overlay to darken slightly */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+            pointer-events: none;
         }
 
-        .container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 1.5rem;
-            padding: 3rem;
+        /* Headings */
+        h1, h2, h3, h4, .ds-font {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
             width: 100%;
-            max-width: 540px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            transform: translateY(0);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .container:hover {
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
-            transform: translateY(-5px);
-        }
-
-        h1 {
-            font-size: 2.25rem;
-            font-weight: 800;
-            letter-spacing: -0.025em;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #34d399, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
-        }
-
-        p.subtitle {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            margin-bottom: 2.5rem;
-            font-weight: 400;
-        }
-
-        /* Upload Area */
-        .upload-area {
-            border: 2px dashed rgba(148, 163, 184, 0.4);
-            border-radius: 1rem;
-            padding: 3rem 2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            margin-bottom: 1.5rem;
-            background: rgba(255, 255, 255, 0.02);
+            padding: 2rem 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            overflow: hidden;
+            gap: 2.5rem;
+            z-index: 50;
+            background: linear-gradient(to bottom, rgba(10,10,10,0.9) 0%, transparent 100%);
+            transition: all 0.3s ease;
         }
 
-        .upload-area:hover, .upload-area.dragover {
-            border-color: var(--primary);
-            background: rgba(16, 185, 129, 0.05);
-            box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.1);
+        .nav-link {
+            color: var(--ds-gold-dim);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            position: relative;
+            cursor: pointer;
+            transition: color 0.3s, text-shadow 0.3s;
         }
 
-        .upload-area input[type="file"] {
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background-color: var(--ds-ember);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            box-shadow: 0 0 8px var(--ds-ember-glow);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--ds-gold);
+            text-shadow: 0 0 10px rgba(203, 181, 129, 0.5);
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* SPA Layout */
+        .sections-wrapper {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+        }
+
+        .section {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease;
+            transform: scale(0.98);
+            padding: 6rem 2rem 2rem 2rem;
+            overflow-y: auto;
+        }
+
+        .section.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        /* Content Containers */
+        .content-container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* ------------- Home Section ------------- */
+        .hero-title {
+            font-size: 4.5rem;
+            color: var(--ds-gold);
+            text-shadow: 0 0 20px rgba(203, 181, 129, 0.4);
+            margin-bottom: 1rem;
+            animation: fadeIn 2s ease forwards;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--ds-text-dim);
+            text-transform: lowercase;
+            letter-spacing: 5px;
+            font-family: 'Cinzel', serif;
+            animation: fadeIn 3s ease forwards;
+        }
+
+        /* ------------- Projects / AI Section ------------- */
+        .panel {
+            background: var(--ds-panel);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--ds-border);
+            border-radius: 4px;
+            padding: 3rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(203, 181, 129, 0.05);
+            max-width: 540px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--ds-gold), transparent);
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--ds-gold);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 15px rgba(203, 181, 129, 0.3);
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--ds-text-dim);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 1px dashed var(--ds-gold-dim);
+            border-radius: 4px;
+            padding: 3rem 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            margin-bottom: 1.5rem;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--ds-ember);
+            background: rgba(226, 88, 34, 0.05);
+            box-shadow: inset 0 0 20px rgba(226, 88, 34, 0.1);
+        }
+
+        .upload-area input {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
             opacity: 0;
             cursor: pointer;
             z-index: 2;
         }
 
         .upload-icon {
-            width: 64px;
-            height: 64px;
+            width: 48px;
+            height: 48px;
             margin-bottom: 1rem;
-            color: var(--primary);
-            transition: transform 0.3s ease;
+            color: var(--ds-gold-dim);
+            transition: color 0.3s, transform 0.3s;
         }
 
         .upload-area:hover .upload-icon {
-            transform: translateY(-5px) scale(1.05);
+            color: var(--ds-ember);
+            transform: scale(1.1);
         }
 
         .upload-text {
             font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
+            color: var(--ds-text);
+            font-family: 'Cinzel', serif;
             z-index: 1;
         }
 
         .upload-subtext {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            z-index: 1;
+            font-size: 0.85rem;
+            color: var(--ds-text-dim);
+            margin-top: 0.5rem;
         }
 
         /* Buttons */
-        .btn {
-            background: linear-gradient(135deg, var(--primary), #047857);
-            color: white;
-            border: none;
+        .ds-btn {
+            background: transparent;
+            color: var(--ds-gold);
+            border: 1px solid var(--ds-border);
             padding: 1rem 2rem;
+            font-family: 'Cinzel', serif;
             font-size: 1.1rem;
             font-weight: 600;
-            border-radius: 0.75rem;
+            letter-spacing: 2px;
             cursor: pointer;
             width: 100%;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
             position: relative;
             overflow: hidden;
-            display: block;
-            text-align: center;
+            text-transform: uppercase;
         }
 
-        .btn::after {
+        .ds-btn::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: all 0.5s ease;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(226, 88, 34, 0.2), transparent);
+            transition: left 0.5s ease;
         }
 
-        .btn:hover:not(:disabled)::after {
+        .ds-btn:hover:not(:disabled)::before {
             left: 100%;
         }
 
-        .btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        .ds-btn:hover:not(:disabled) {
+            border-color: var(--ds-ember);
+            color: var(--ds-ember-glow);
+            box-shadow: 0 0 15px rgba(226, 88, 34, 0.3);
+            text-shadow: 0 0 8px rgba(255, 123, 0, 0.5);
         }
 
-        .btn:active:not(:disabled) {
-            transform: translateY(1px);
-        }
-
-        .btn:disabled {
-            background: #334155;
-            color: #94a3b8;
+        .ds-btn:disabled {
+            border-color: rgba(255,255,255,0.05);
+            color: var(--ds-text-dim);
             cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, var(--secondary), #1d4ed8);
-            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
-            margin-top: 1.5rem;
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+            background: rgba(0,0,0,0.5);
         }
 
         /* Loader */
         #loader {
             display: none;
-            margin: 2.5rem 0;
-            animation: fadeIn 0.5s ease;
+            margin: 2rem 0;
         }
 
-        .scanning-animation {
-            width: 100px;
-            height: 100px;
+        .bonfire-loader {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
             position: relative;
-            margin: 0 auto 1.5rem;
-            border-radius: 1rem;
-            overflow: hidden;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
         }
 
-        .scanner-bar {
-            width: 100%;
-            height: 4px;
-            background: var(--primary);
+        .flame {
             position: absolute;
-            top: 0;
-            left: 0;
-            box-shadow: 0 0 15px var(--primary), 0 0 5px var(--primary);
-            animation: scanLine 2s linear infinite;
+            bottom: 0;
+            width: 20px;
+            height: 40px;
+            background: var(--ds-ember);
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 20px var(--ds-ember-glow);
+            animation: flicker 1s infinite alternate;
+        }
+        
+        .flame-left { left: 10px; height: 30px; animation-delay: 0.2s; }
+        .flame-right { right: 10px; height: 35px; animation-delay: 0.5s; background: var(--ds-gold); }
+        .flame-main { left: 20px; height: 50px; z-index: 2; background: #ff4500; }
+
+        @keyframes flicker {
+            0% { transform: scaleY(1) translateY(0); opacity: 0.8; }
+            100% { transform: scaleY(1.2) translateY(-5px); opacity: 1; }
         }
 
         .loader-text {
-            font-weight: 500;
-            color: var(--primary);
-            letter-spacing: 1px;
-            animation: pulseText 1.5s infinite;
+            color: var(--ds-gold);
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+            animation: pulse-glow 2s infinite;
         }
 
-        /* Results Section */
+        /* Results */
         #result-section {
             display: none;
-            animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeIn 0.8s ease;
         }
 
-        .image-preview-container {
+        .image-preview {
             width: 100%;
-            height: 240px;
-            border-radius: 1rem;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 250px;
+            object-fit: contain;
             background: #000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            position: relative;
+            border: 1px solid var(--ds-border);
+            margin-bottom: 1.5rem;
+            filter: contrast(1.1) brightness(0.9);
         }
 
-        #image-preview {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        
-        .image-preview-container:hover #image-preview {
-            transform: scale(1.05);
-        }
-
-        .result-card {
-            background: rgba(15, 23, 42, 0.4);
-            padding: 2rem 1.5rem;
-            border-radius: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            margin-bottom: 1rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .result-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        .result-box {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--ds-border);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
         }
 
         .disease-name {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: #fff;
+            font-size: 1.8rem;
+            color: var(--ds-gold);
+            font-family: 'Cinzel', serif;
             margin-bottom: 1rem;
-            letter-spacing: -0.025em;
+            text-align: center;
         }
 
-        .confidence-wrapper {
+        .conf-row {
             display: flex;
-            align-items: center;
             justify-content: space-between;
             margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--ds-text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .confidence-label {
-            font-size: 1rem;
-            color: var(--text-muted);
-            font-weight: 500;
+        .conf-val {
+            color: var(--ds-text);
+            font-weight: 600;
         }
 
-        .confidence-value {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .progress-bar-container {
+        .bar-bg {
             width: 100%;
-            height: 8px;
+            height: 4px;
             background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
+            position: relative;
         }
 
-        .progress-bar {
+        .bar-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #f59e0b, #34d399);
-            border-radius: 4px;
-            transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+            background: var(--ds-gold);
+            transition: width 1.5s ease-out;
+            box-shadow: 0 0 10px var(--ds-gold);
         }
 
-        .status-healthy .disease-name { color: var(--success); }
-        .status-healthy .progress-bar { background: var(--success); }
-        
-        .status-warning .disease-name { color: var(--warning); }
-        .status-warning .progress-bar { background: var(--warning); }
-        
-        .status-danger .disease-name { color: var(--error); }
-        .status-danger .progress-bar { background: var(--error); }
-
-
+        /* Error */
         .error-msg {
-            color: var(--error);
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 0.5rem;
+            color: var(--ds-ember);
             padding: 1rem;
+            border: 1px solid var(--ds-ember);
+            background: rgba(226, 88, 34, 0.1);
             margin-bottom: 1.5rem;
-            font-weight: 500;
             display: none;
-            animation: fadeIn 0.3s ease;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
         }
 
-        /* Animations */
-        @keyframes float {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-20px) scale(1.05); }
+        /* ------------- Skills Section ------------- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
         }
 
-        @keyframes scanLine {
-            0% { top: -10%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 110%; opacity: 0; }
+        .skill-card {
+            background: rgba(20, 18, 17, 0.6);
+            border: 1px solid var(--ds-border);
+            padding: 2rem 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        @keyframes pulseText {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        .skill-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 50%; width: 0; height: 2px;
+            background: var(--ds-gold);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .skill-card:hover {
+            background: rgba(203, 181, 129, 0.05);
+            border-color: var(--ds-gold-dim);
+            transform: translateY(-5px);
         }
 
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        .skill-card:hover::after {
+            width: 100%;
+            box-shadow: 0 0 15px var(--ds-gold);
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .container {
-                padding: 2rem 1.5rem;
-            }
-            h1 { font-size: 1.75rem; }
-            .upload-area { padding: 2rem 1rem; }
+        .skill-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: var(--ds-text);
+            letter-spacing: 2px;
+        }
+
+        /* ------------- Research Section ------------- */
+        .research-msg {
+            font-size: 3rem;
+            color: var(--ds-gold-dim);
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            opacity: 0.6;
+            text-shadow: 0 0 20px rgba(139, 121, 82, 0.2);
+            font-family: 'Cinzel', serif;
+        }
+
+        /* ------------- Contact Section ------------- */
+        .contact-box {
+            display: inline-block;
+            text-align: left;
+            margin-top: 2rem;
+            padding: 3rem;
+            border: 1px solid var(--ds-border);
+            background: rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        .contact-box::before, .contact-box::after {
+            content: '❖';
+            position: absolute;
+            top: -15px;
+            color: var(--ds-gold-dim);
+            font-size: 1.5rem;
+            width: 100%;
+            text-align: center;
+            left: 0;
+        }
+        .contact-box::after {
+            top: auto;
+            bottom: -15px;
+        }
+
+        .contact-item {
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .contact-label {
+            font-family: 'Cinzel', serif;
+            color: var(--ds-gold-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            width: 80px;
+        }
+
+        .contact-val {
+            font-size: 1.5rem;
+            color: var(--ds-text);
+            font-weight: 300;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .contact-val:hover {
+            color: var(--ds-gold);
+            text-shadow: 0 0 10px rgba(203, 181, 129, 0.5);
+        }
+
+        /* Utils */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-glow { 0%, 100% { text-shadow: 0 0 5px rgba(203,181,129,0.2); } 50% { text-shadow: 0 0 20px rgba(203,181,129,0.8), 0 0 30px rgba(226,88,34,0.6); } }
+
+        /* Status Colors */
+        .status-danger { color: var(--danger); text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+        .status-warning { color: var(--warning); text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        .status-healthy { color: var(--ds-gold); text-shadow: 0 0 10px rgba(203, 181, 129, 0.5); }
+        
+        .bg-danger { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+        .bg-warning { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
+        .bg-healthy { background: var(--ds-gold); box-shadow: 0 0 10px var(--ds-gold); }
+
+        @media (max-width: 768px) {
+            nav { flex-wrap: wrap; padding: 1rem; gap: 1rem; }
+            .nav-link { font-size: 0.9rem; }
+            .hero-title { font-size: 3rem; }
+            .section { padding-top: 8rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Background Shapes -->
-    <div class="bg-shape shape-1"></div>
-    <div class="bg-shape shape-2"></div>
+    <!-- Embers Background -->
+    <canvas id="embers-canvas"></canvas>
+    <div class="overlay"></div>
 
-    <div class="container">
-        <h1>Chilli Leaf AI</h1>
-        <p class="subtitle">Upload a photo to accurately detect the disease status</p>
-        
-        <div class="error-msg" id="error-message"></div>
+    <!-- Navigation -->
+    <nav>
+        <a class="nav-link active" onclick="navTo('home')">Home</a>
+        <a class="nav-link" onclick="navTo('projects')">Projects</a>
+        <a class="nav-link" onclick="navTo('skills')">Skills</a>
+        <a class="nav-link" onclick="navTo('research')">Research</a>
+        <a class="nav-link" onclick="navTo('contact')">Contact</a>
+    </nav>
 
-        <form id="upload-form" enctype="multipart/form-data">
-            <div class="upload-area" id="drop-area">
-                <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                </svg>
-                <div class="upload-text" id="file-name-display">Drag & drop your leaf image</div>
-                <div class="upload-subtext" id="file-hint">or click to browse from device (JPG, PNG)</div>
-                <input type="file" name="file" id="file-input" accept="image/jpeg, image/png, image/jpg" required>
+    <!-- Content Sections -->
+    <div class="sections-wrapper">
+
+        <!-- Home -->
+        <section id="home" class="section active">
+            <div class="content-container">
+                <h1 class="hero-title">HI I am Daksh</h1>
+                <p class="hero-subtitle">this website showcases my projects</p>
             </div>
+        </section>
 
-            <button type="submit" class="btn" id="submit-btn" disabled>Analyze Status</button>
-        </form>
-
-        <div id="loader">
-            <div class="scanning-animation">
-                <div class="scanner-bar"></div>
-            </div>
-            <p class="loader-text">Analyzing leaf integrity...</p>
-        </div>
-
-        <div id="result-section">
-            <div class="image-preview-container">
-                <img id="image-preview" src="" alt="Uploaded Leaf">
-            </div>
-            
-            <div class="result-card" id="result-card">
-                <div class="disease-name" id="result-disease">Disease Name</div>
+        <!-- Projects (Chilli Leaf AI) -->
+        <section id="projects" class="section">
+            <div class="content-container">
+                <h2 class="section-title">Chilli Leaf AI</h2>
+                <p class="section-subtitle ds-font">Uncover the blight that afflicts your crops</p>
                 
-                <div class="confidence-wrapper">
-                    <span class="confidence-label">AI Confidence Model</span>
-                    <span class="confidence-value"><span id="result-confidence">0</span>%</span>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="confidence-bar"></div>
+                <div class="panel">
+                    <div class="error-msg" id="error-message"></div>
+
+                    <form id="upload-form" enctype="multipart/form-data">
+                        <div class="upload-area" id="drop-area">
+                            <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            <div class="upload-text" id="file-name-display">Offer Your Leaf Image</div>
+                            <div class="upload-subtext" id="file-hint">Drag & Drop or Click (JPG, PNG)</div>
+                            <input type="file" name="file" id="file-input" accept="image/jpeg, image/png, image/jpg" required>
+                        </div>
+                        <button type="submit" class="ds-btn" id="submit-btn" disabled>Kindle The Flame (Analyze)</button>
+                    </form>
+
+                    <div id="loader">
+                        <div class="bonfire-loader">
+                            <div class="flame flame-left"></div>
+                            <div class="flame flame-right"></div>
+                            <div class="flame flame-main"></div>
+                        </div>
+                        <p class="loader-text">Gazing into the embers...</p>
+                    </div>
+
+                    <div id="result-section">
+                        <img id="image-preview" src="" alt="Offered Leaf" class="image-preview">
+                        
+                        <div class="result-box">
+                            <div class="disease-name" id="result-disease">Disease Name</div>
+                            <div class="conf-row">
+                                <span>Soul resonance (Confidence)</span>
+                                <span class="conf-val"><span id="result-confidence">0</span>%</span>
+                            </div>
+                            <div class="bar-bg">
+                                <div class="bar-fill" id="confidence-bar"></div>
+                            </div>
+                        </div>
+                        
+                        <button class="ds-btn" onclick="resetForm()" style="margin-top: 1rem;">Offer Another Soul</button>
+                    </div>
                 </div>
             </div>
-            
-            <button class="btn btn-secondary" onclick="resetForm()">Scan Another Leaf</button>
-        </div>
+        </section>
+
+        <!-- Skills -->
+        <section id="skills" class="section">
+            <div class="content-container">
+                <h2 class="section-title">Arsenal of Skills</h2>
+                <p class="section-subtitle ds-font">The mastery required to forge the web</p>
+                
+                <div class="skills-grid">
+                    <div class="skill-card"><div class="skill-name">HTML & CSS</div></div>
+                    <div class="skill-card"><div class="skill-name">JavaScript</div></div>
+                    <div class="skill-card"><div class="skill-name">React.js</div></div>
+                    <div class="skill-card"><div class="skill-name">Node.js</div></div>
+                    <div class="skill-card"><div class="skill-name">Python</div></div>
+                    <div class="skill-card"><div class="skill-name">Flask / Django</div></div>
+                    <div class="skill-card"><div class="skill-name">Git & GitHub</div></div>
+                    <div class="skill-card"><div class="skill-name">UI / UX Design</div></div>
+                    <div class="skill-card"><div class="skill-name">SQL / NoSQL</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research -->
+        <section id="research" class="section">
+            <div class="content-container">
+                <h2 class="section-title">Research Paper</h2>
+                <p class="section-subtitle ds-font">Unearthed Knowledge</p>
+                
+                <div style="margin-top: 4rem;">
+                    <div class="research-msg">Coming Soon</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" class="section">
+            <div class="content-container">
+                <h2 class="section-title">Summon Me</h2>
+                <p class="section-subtitle ds-font">Leave your sign</p>
+                
+                <div class="contact-box">
+                    <div class="contact-item">
+                        <span class="contact-label">Phone</span>
+                        <span class="contact-val">9467216728</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-label">Email</span>
+                        <span class="contact-val">243daksh@gmail.com</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </div>
 
     <script>
+        // --------- Embers Background Animation ---------
+        const canvas = document.getElementById('embers-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let embers = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Ember {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * height; // initial random spread
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = height + 10;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 1;
+                this.speedY = -(Math.random() * 2 + 0.5);
+                this.life = Math.random() * 0.5 + 0.3;
+                this.opacity = Math.random() * 0.8 + 0.2;
+                this.decay = Math.random() * 0.005 + 0.002;
+            }
+
+            update() {
+                this.x += this.speedX + (Math.sin(this.y * 0.05) * 0.5); // wavy movement
+                this.y += this.speedY;
+                this.opacity -= this.decay;
+
+                if (this.opacity <= 0 || this.y < -10) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(226, 88, 34, ${this.opacity})`;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#ff7b00';
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 70; i++) {
+            embers.push(new Ember());
+        }
+
+        function animateEmbers() {
+            ctx.clearRect(0, 0, width, height);
+            embers.forEach(ember => {
+                ember.update();
+                ember.draw();
+            });
+            requestAnimationFrame(animateEmbers);
+        }
+        animateEmbers();
+
+        // --------- Navigation Logic ---------
+        function navTo(sectionId) {
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick').includes(sectionId)) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Update sections
+            document.querySelectorAll('.section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // --------- Chilli Leaf AI Logic ---------
         const form = document.getElementById('upload-form');
         const fileInput = document.getElementById('file-input');
         const fileNameDisplay = document.getElementById('file-name-display');
@@ -483,7 +781,6 @@
         const loader = document.getElementById('loader');
         const resultSection = document.getElementById('result-section');
         const errorMessage = document.getElementById('error-message');
-        const resultCard = document.getElementById('result-card');
         
         const imagePreview = document.getElementById('image-preview');
         const resultDisease = document.getElementById('result-disease');
@@ -492,27 +789,23 @@
 
         let selectedFile = null;
 
-        // Determine severity class
         function getSeverityClass(diseaseName) {
-            const lowerName = diseaseName.toLowerCase();
-            if (lowerName.includes('healthy')) return 'status-healthy';
-            if (lowerName.includes('nutritional deficiency')) return 'status-warning';
-            return 'status-danger';
+            const lower = diseaseName.toLowerCase();
+            if (lower.includes('healthy')) return {text: 'status-healthy', bg: 'bg-healthy'};
+            if (lower.includes('nutritional deficiency')) return {text: 'status-warning', bg: 'bg-warning'};
+            return {text: 'status-danger', bg: 'bg-danger'};
         }
 
-        // File selection handling
+        // File handling
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 selectedFile = e.target.files[0];
                 fileNameDisplay.textContent = selectedFile.name;
-                fileHint.textContent = (selectedFile.size / 1024 / 1024).toFixed(2) + ' MB';
+                fileHint.textContent = (selectedFile.size / 1024 / 1024).toFixed(2) + ' MB Soul Readied';
                 submitBtn.disabled = false;
                 
-                // Show local preview immediately in background
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    imagePreview.src = e.target.result;
-                }
+                reader.onload = (ev) => { imagePreview.src = ev.target.result; }
                 reader.readAsDataURL(selectedFile);
             } else {
                 resetUploadArea();
@@ -521,20 +814,17 @@
 
         function resetUploadArea() {
             selectedFile = null;
-            fileNameDisplay.textContent = "Drag & drop your leaf image";
-            fileHint.textContent = "or click to browse from device (JPG, PNG)";
+            fileNameDisplay.textContent = "Offer Your Leaf Image";
+            fileHint.textContent = "Drag & Drop or Click (JPG, PNG)";
             submitBtn.disabled = true;
         }
 
-        // Drag & Drop visual effects
+        // Drag & Drop
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, preventDefaults, false);
+            dropArea.addEventListener(eventName, e => {
+                e.preventDefault(); e.stopPropagation();
+            }, false);
         });
-
-        function preventDefaults (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
 
         ['dragenter', 'dragover'].forEach(eventName => {
             dropArea.addEventListener(eventName, () => dropArea.classList.add('dragover'), false);
@@ -545,80 +835,64 @@
         });
 
         dropArea.addEventListener('drop', (e) => {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            fileInput.files = files;
-            if(files.length > 0) {
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
                 fileInput.dispatchEvent(new Event('change'));
             }
         });
 
-        // Form Submission
+        // Form Submit
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             if (!selectedFile) return;
 
             const formData = new FormData();
             formData.append('file', selectedFile);
 
-            // UI updates
             form.style.display = 'none';
             errorMessage.style.display = 'none';
             resultSection.style.display = 'none';
             loader.style.display = 'block';
-            confidenceBar.style.width = '0%'; // Reset bar
+            confidenceBar.style.width = '0%';
 
             try {
-                const response = await fetch('/predict', {
-                    method: 'POST',
-                    body: formData
-                });
-                
+                const response = await fetch('/predict', { method: 'POST', body: formData });
                 const data = await response.json();
                 loader.style.display = 'none';
 
-                if (data.error) {
-                    throw new Error(data.error);
-                }
+                if (data.error) throw new Error(data.error);
 
-                // Show results
                 resultDisease.textContent = data.disease;
                 
-                // Animate confidence counter
+                // Animate confidence
                 const confValue = parseFloat(data.confidence).toFixed(1);
                 animateValue(resultConfidence, 0, confValue, 1000);
                 
-                // Apply styling classes based on severity
-                resultCard.className = 'result-card ' + getSeverityClass(data.disease);
+                // Style severity
+                const severities = getSeverityClass(data.disease);
+                resultDisease.className = 'disease-name ' + severities.text;
+                confidenceBar.className = 'bar-fill ' + severities.bg;
                 
                 resultSection.style.display = 'block';
                 
-                // Delay progress bar animation slightly for better effect
-                setTimeout(() => {
-                    confidenceBar.style.width = `${confValue}%`;
-                }, 100);
+                setTimeout(() => { confidenceBar.style.width = `${confValue}%`; }, 100);
 
             } catch (err) {
                 loader.style.display = 'none';
                 form.style.display = 'block';
-                errorMessage.textContent = err.message || "An error occurred during prediction.";
+                errorMessage.textContent = "The embers fade: " + (err.message || "An error occurred.");
                 errorMessage.style.display = 'block';
             }
         });
 
-        // Number animation function
         function animateValue(obj, start, end, duration) {
             let startTimestamp = null;
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
                 obj.innerHTML = (progress * (end - start) + start).toFixed(1);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                } else {
-                    obj.innerHTML = end;
-                }
+                if (progress < 1) window.requestAnimationFrame(step);
+                else obj.innerHTML = end;
             };
             window.requestAnimationFrame(step);
         }
