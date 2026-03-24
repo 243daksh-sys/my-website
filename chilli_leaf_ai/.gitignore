@@ -1,0 +1,20 @@
+# Environments
+venv/
+venv311/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Models and data
+data/
+models/
+*.h5
+*.pth
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
