@@ -1,9 +1,10 @@
-tensorflow
+tensorflow-cpu
 keras
-opencv-python
+opencv-python-headless
 numpy
 matplotlib
 scikit-learn
 pillow
 flask
 tqdm
+gunicorn
