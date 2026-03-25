@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- SEO Meta Tags -->
+    <title>Daksh's Web Portfolio & AI Models</title>
+    <meta name="description" content="Daksh's portfolio showcasing web development skills, research papers, and the advanced Chilli Leaf AI disease detection system.">
+    <meta name="keywords" content="Daksh, Portfolio, Web Developer, Chilli Leaf AI, Machine Learning, UI/UX, Dark Souls Theme">
+    <meta name="author" content="Daksh">
+    
+    <!-- Google Fonts for Dark Souls Vibe -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ds-bg-dark: #0a0a0a;
+            --ds-bg-light: #1c1816;
+            --ds-ember: #e25822;         
+            --ds-ember-glow: #ff7b00;  
+            --ds-gold: #cbb581;          
+            --ds-gold-dim: #8b7952;
+            --ds-text: #d4d4d4;          
+            --ds-text-dim: #8a8a8a;
+            --ds-border: rgba(203, 181, 129, 0.2);
+            --ds-panel: rgba(20, 18, 17, 0.85);
+
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ds-bg-dark);
+            color: var(--ds-text);
+            min-height: 100vh;
+            overflow: hidden; 
+            position: relative;
+            line-height: 1.6;
+        }
+
+        /* Ember Canvas Background */
+        #embers-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0; pointer-events: none;
+            background: radial-gradient(circle at center, var(--ds-bg-light) 0%, var(--ds-bg-dark) 100%);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1; pointer-events: none;
+        }
+
+        h1, h2, h3, h4, .ds-font {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            z-index: 50;
+            background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, transparent 100%);
+            transition: all 0.3s ease;
+            flex-wrap: wrap; /* responsive layout */
+        }
+
+        .nav-link {
+            color: var(--ds-gold-dim);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            cursor: pointer;
+            transition: color 0.3s, text-shadow 0.3s;
+            padding: 0.5rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0px; left: 50%;
+            width: 0; height: 1px;
+            background-color: var(--ds-ember);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            box-shadow: 0 0 8px var(--ds-ember-glow);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--ds-gold);
+            text-shadow: 0 0 10px rgba(203, 181, 129, 0.5);
+        }
+
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+        /* SPA Layout */
+        .sections-wrapper {
+            position: relative;
+            width: 100vw; height: 100vh;
+            z-index: 10;
+        }
+
+        .section {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease;
+            transform: scale(0.98);
+            padding: 6rem 1.5rem 2rem 1.5rem;
+            overflow-y: auto;
+        }
+
+        .section.active { opacity: 1; visibility: visible; transform: scale(1); }
+
+        .content-container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* Buttons */
+        .ds-btn {
+            background: transparent;
+            color: var(--ds-gold);
+            border: 1px solid var(--ds-border);
+            padding: 0.8rem 2rem;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            cursor: pointer;
+            width: auto;
+            min-height: 48px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .ds-btn-block { width: 100%; margin-top: 1rem; }
+
+        .ds-btn::before {
+            content: ''; position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(226, 88, 34, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .ds-btn:hover:not(:disabled)::before { left: 100%; }
+
+        .ds-btn:hover:not(:disabled) {
+            border-color: var(--ds-ember);
+            color: var(--ds-ember-glow);
+            box-shadow: 0 0 15px rgba(226, 88, 34, 0.3);
+            text-shadow: 0 0 8px rgba(255, 123, 0, 0.5);
+        }
+
+        .ds-btn:disabled {
+            border-color: rgba(255,255,255,0.05);
+            color: var(--ds-text-dim);
+            cursor: not-allowed;
+            background: rgba(0,0,0,0.5);
+        }
+
+        /* ------------- Home Section ------------- */
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            color: var(--ds-gold);
+            text-shadow: 0 0 20px rgba(203, 181, 129, 0.4);
+            margin-bottom: 1rem;
+            animation: fadeIn 2s ease forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--ds-text-dim);
+            text-transform: lowercase;
+            letter-spacing: 3px;
+            font-family: 'Cinzel', serif;
+            animation: fadeIn 3s ease forwards;
+            margin-bottom: 2rem;
+        }
+
+        /* ------------- Projects / AI Section ------------- */
+        .panel {
+            background: var(--ds-panel);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--ds-border);
+            border-radius: 4px;
+            padding: clamp(1.5rem, 5vw, 3rem);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(203, 181, 129, 0.05);
+            max-width: 540px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .panel::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--ds-gold), transparent);
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            color: var(--ds-gold);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 15px rgba(203, 181, 129, 0.3);
+        }
+
+        .section-subtitle {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: var(--ds-text-dim);
+            margin-bottom: 2rem;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 1px dashed var(--ds-gold-dim);
+            border-radius: 4px;
+            padding: 2.5rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            margin-bottom: 1.5rem;
+            background: rgba(0,0,0,0.4);
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--ds-ember);
+            background: rgba(226, 88, 34, 0.05);
+            box-shadow: inset 0 0 20px rgba(226, 88, 34, 0.1);
+        }
+
+        .upload-area input {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer; z-index: 2;
+        }
+
+        .upload-icon {
+            width: 42px; height: 42px; margin-bottom: 1rem;
+            color: var(--ds-gold-dim);
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .upload-area:hover .upload-icon { color: var(--ds-ember); transform: scale(1.1); }
+
+        .upload-text { font-size: 1.1rem; color: var(--ds-text); font-family: 'Cinzel', serif; z-index: 1; }
+        .upload-subtext { font-size: 0.85rem; color: var(--ds-text-dim); margin-top: 0.5rem; }
+
+        /* Loader */
+        #loader { display: none; margin: 2rem 0; width: 100%; text-align: center; }
+
+        .bonfire-loader { width: 60px; height: 60px; margin: 0 auto 1rem; position: relative; }
+
+        .flame {
+            position: absolute; bottom: 0; width: 20px; height: 40px;
+            background: var(--ds-ember); border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 20px var(--ds-ember-glow); animation: flicker 1s infinite alternate;
+        }
+        
+        .flame-left { left: 10px; height: 30px; animation-delay: 0.2s; }
+        .flame-right { right: 10px; height: 35px; animation-delay: 0.5s; background: var(--ds-gold); }
+        .flame-main { left: 20px; height: 50px; z-index: 2; background: #ff4500; }
+
+        @keyframes flicker {
+            0% { transform: scaleY(1) translateY(0); opacity: 0.8; }
+            100% { transform: scaleY(1.2) translateY(-5px); opacity: 1; }
+        }
+
+        .loader-text { color: var(--ds-gold); font-family: 'Cinzel', serif; letter-spacing: 2px; animation: pulse-glow 2s infinite; }
+
+        /* Results */
+        #result-section { display: none; animation: fadeIn 0.8s ease; width: 100%; }
+
+        .image-preview {
+            width: 100%; height: 220px; object-fit: contain;
+            background: #000; border: 1px solid var(--ds-border);
+            margin-bottom: 1.5rem; filter: contrast(1.1) brightness(0.9);
+        }
+
+        .result-box {
+            background: rgba(0,0,0,0.6); border: 1px solid var(--ds-border);
+            padding: 1.5rem; margin-bottom: 1.5rem; text-align: left;
+        }
+
+        .disease-name { font-size: clamp(1.4rem, 4vw, 1.8rem); color: var(--ds-gold); font-family: 'Cinzel', serif; margin-bottom: 1rem; text-align: center; }
+
+        .conf-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--ds-text-dim); text-transform: uppercase; letter-spacing: 1px; }
+        .conf-val { color: var(--ds-text); font-weight: 600; }
+
+        .bar-bg { width: 100%; height: 4px; background: rgba(255,255,255,0.1); position: relative; }
+        .bar-fill { height: 100%; width: 0%; background: var(--ds-gold); transition: width 1.5s ease-out; box-shadow: 0 0 10px var(--ds-gold); }
+
+        /* Error */
+        .error-msg {
+            color: var(--ds-ember); padding: 1rem; border: 1px solid var(--ds-ember);
+            background: rgba(226, 88, 34, 0.1); margin-bottom: 1.5rem; display: none;
+            font-family: 'Cinzel', serif; letter-spacing: 1px; width: 100%; text-align: center;
+        }
+
+        /* ------------- Skills Section ------------- */
+        .skills-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1.5rem; margin-top: 2rem; width: 100%;
+        }
+
+        .skill-card {
+            background: rgba(20, 18, 17, 0.6); border: 1px solid var(--ds-border);
+            padding: 1.5rem 0.5rem; text-align: center; transition: all 0.3s ease; position: relative;
+        }
+
+        .skill-card::after {
+            content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px;
+            background: var(--ds-gold); transition: all 0.3s ease; transform: translateX(-50%);
+        }
+
+        .skill-card:hover { background: rgba(203, 181, 129, 0.05); border-color: var(--ds-gold-dim); transform: translateY(-3px); }
+        .skill-card:hover::after { width: 100%; box-shadow: 0 0 15px var(--ds-gold); }
+
+        .skill-name { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--ds-text); letter-spacing: 1px; }
+
+        /* ------------- Research & Contact Sections ------------- */
+        .research-msg {
+            font-size: clamp(1.8rem, 5vw, 3rem); color: var(--ds-gold-dim); text-transform: uppercase;
+            letter-spacing: 8px; opacity: 0.6; text-shadow: 0 0 20px rgba(139, 121, 82, 0.2); font-family: 'Cinzel', serif;
+        }
+
+        .contact-box {
+            display: inline-block; text-align: left; margin-top: 2rem;
+            padding: clamp(1.5rem, 5vw, 3rem); border: 1px solid var(--ds-border);
+            background: rgba(0,0,0,0.5); position: relative; width: 100%; max-width: 450px;
+        }
+        
+        .contact-box::before, .contact-box::after {
+            content: '❖'; position: absolute; left: 0; width: 100%; text-align: center;
+            color: var(--ds-gold-dim); font-size: 1.5rem; top: -15px;
+        }
+        .contact-box::after { top: auto; bottom: -15px; }
+
+        .contact-item { margin: 1.5rem 0; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+        .contact-label { font-family: 'Cinzel', serif; color: var(--ds-gold-dim); text-transform: uppercase; letter-spacing: 2px; }
+        .contact-val { font-size: clamp(1.1rem, 3vw, 1.5rem); color: var(--ds-text); font-weight: 300; letter-spacing: 1px; transition: color 0.3s; }
+        .contact-val:hover { color: var(--ds-gold); text-shadow: 0 0 10px rgba(203, 181, 129, 0.5); }
+
+        /* ------------- Floating Chat UI ------------- */
+        .chat-widget {
+            position: fixed; bottom: 20px; right: 20px; z-index: 100;
+            display: flex; flex-direction: column; align-items: flex-end;
+        }
+        
+        .chat-btn {
+            background: var(--ds-panel); border: 1px solid var(--ds-gold-dim);
+            width: 56px; height: 56px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s ease; color: var(--ds-gold);
+        }
+        
+        .chat-btn:hover { background: var(--ds-gold-dim); color: var(--ds-bg-dark); transform: scale(1.05); }
+
+        .chat-window {
+            width: 300px; max-width: 90vw; background: var(--ds-panel); border: 1px solid var(--ds-border);
+            border-radius: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            margin-bottom: 15px; display: none; opacity: 0; transform: translateY(10px);
+            transition: all 0.3s ease; flex-direction: column; backdrop-filter: blur(8px);
+        }
+        
+        .chat-window.open { display: flex; opacity: 1; transform: translateY(0); }
+
+        .chat-header {
+            background: rgba(0,0,0,0.6); padding: 1rem; border-bottom: 1px solid var(--ds-border);
+            font-family: 'Cinzel', serif; color: var(--ds-gold); display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .close-chat { cursor: pointer; color: var(--ds-text-dim); }
+        .close-chat:hover { color: var(--ds-ember); }
+
+        .chat-body { padding: 1.5rem 1rem; height: 200px; overflow-y: auto; color: var(--ds-text-dim); font-size: 0.9rem; }
+        .chat-msg { margin-bottom: 10px; background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 4px; border-left: 2px solid var(--ds-gold-dim); }
+        .chat-msg.user { background: rgba(203,181,129,0.1); border-left: none; border-right: 2px solid var(--ds-gold); text-align: right; color: var(--ds-text); }
+
+        .chat-input-area { display: flex; border-top: 1px solid var(--ds-border); }
+        .chat-input { flex: 1; min-height: 48px; background: transparent; border: none; padding: 0 1rem; color: var(--ds-text); font-family: 'Inter', sans-serif; outline: none; }
+        .chat-send { background: rgba(203,181,129,0.1); border: none; padding: 0 1rem; color: var(--ds-gold); cursor: pointer; font-family: 'Cinzel', serif; transition: background 0.2s; min-height: 48px; }
+        .chat-send:hover { background: rgba(203,181,129,0.2); }
+
+        /* Utils */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-glow { 0%, 100% { text-shadow: 0 0 5px rgba(203,181,129,0.2); } 50% { text-shadow: 0 0 20px rgba(203,181,129,0.8), 0 0 30px rgba(226,88,34,0.6); } }
+
+        /* Status Colors */
+        .status-danger { color: var(--danger); text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+        .status-warning { color: var(--warning); text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        .status-healthy { color: var(--ds-gold); text-shadow: 0 0 10px rgba(203, 181, 129, 0.5); }
+        
+        .bg-danger { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+        .bg-warning { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
+        .bg-healthy { background: var(--ds-gold); box-shadow: 0 0 10px var(--ds-gold); }
+
+        /* Media Queries - Mobile Responsive fixes */
+        @media (max-width: 768px) {
+            nav { padding: 1rem 0; gap: 0.5rem; justify-content: center; background: rgba(10,10,10,0.95); }
+            .nav-link { font-size: 0.8rem; padding: 0.5rem; }
+            .section { padding-top: 6rem; padding-left: 1rem; padding-right: 1rem; }
+            .skills-grid { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; }
+            .contact-item { flex-direction: column; gap: 0.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Embers Background -->
+    <canvas id="embers-canvas"></canvas>
+    <div class="overlay"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a class="nav-link active" onclick="navTo('home')">Home</a>
+        <a class="nav-link" onclick="navTo('projects')">AI Models</a>
+        <a class="nav-link" onclick="navTo('skills')">Skills</a>
+        <a class="nav-link" onclick="navTo('research')">Research</a>
+        <a class="nav-link" onclick="navTo('contact')">Contact</a>
+    </nav>
+
+    <!-- Content Sections -->
+    <div class="sections-wrapper">
+
+        <!-- Home -->
+        <section id="home" class="section active">
+            <div class="content-container">
+                <h1 class="hero-title">HI I am Daksh</h1>
+                <p class="hero-subtitle">this website showcases my projects</p>
+                <button class="ds-btn" style="margin-top: 1rem;" onclick="navTo('projects')">Behold the Chilli Leaf AI</button>
+            </div>
+        </section>
+
+        <!-- Projects (Chilli Leaf AI) -->
+        <section id="projects" class="section">
+            <div class="content-container">
+                <h2 class="section-title">Chilli Leaf AI</h2>
+                <p class="section-subtitle ds-font">Uncover the blight that afflicts your crops</p>
+                
+                <div class="panel">
+                    <div class="error-msg" id="error-message"></div>
+
+                    <form id="upload-form" enctype="multipart/form-data">
+                        <div class="upload-area" id="drop-area">
+                            <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            <div class="upload-text" id="file-name-display">Offer Your Leaf Image</div>
+                            <div class="upload-subtext" id="file-hint">Drag & Drop or Click (JPG, PNG) Max 5MB</div>
+                            <input type="file" name="file" id="file-input" accept="image/jpeg, image/png, image/jpg" required>
+                        </div>
+                        <button type="submit" class="ds-btn ds-btn-block" id="submit-btn" disabled>Kindle The Flame (Analyze)</button>
+                    </form>
+
+                    <div id="loader">
+                        <div class="bonfire-loader">
+                            <div class="flame flame-left"></div>
+                            <div class="flame flame-right"></div>
+                            <div class="flame flame-main"></div>
+                        </div>
+                        <p class="loader-text ds-font">Gazing into the embers... Loading Image Data</p>
+                    </div>
+
+                    <div id="result-section">
+                        <img id="image-preview" src="" alt="Offered Leaf" class="image-preview">
+                        
+                        <div class="result-box">
+                            <div class="disease-name" id="result-disease">Disease Name</div>
+                            <div class="conf-row">
+                                <span>Soul resonance (Confidence)</span>
+                                <span class="conf-val"><span id="result-confidence">0</span>%</span>
+                            </div>
+                            <div class="bar-bg">
+                                <div class="bar-fill" id="confidence-bar"></div>
+                            </div>
+                        </div>
+                        
+                        <button class="ds-btn ds-btn-block" onclick="resetForm()">Offer Another Soul</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills -->
+        <section id="skills" class="section">
+            <div class="content-container">
+                <h2 class="section-title">Arsenal of Skills</h2>
+                <p class="section-subtitle ds-font">The mastery required to forge the web</p>
+                
+                <div class="skills-grid">
+                    <div class="skill-card"><div class="skill-name">HTML & CSS</div></div>
+                    <div class="skill-card"><div class="skill-name">JavaScript</div></div>
+                    <div class="skill-card"><div class="skill-name">React.js</div></div>
+                    <div class="skill-card"><div class="skill-name">Node.js</div></div>
+                    <div class="skill-card"><div class="skill-name">Python</div></div>
+                    <div class="skill-card"><div class="skill-name">Flask / Django</div></div>
+                    <div class="skill-card"><div class="skill-name">Git & GitHub</div></div>
+                    <div class="skill-card"><div class="skill-name">UI / UX Design</div></div>
+                    <div class="skill-card"><div class="skill-name">SQL / NoSQL</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research -->
+        <section id="research" class="section">
+            <div class="content-container">
+                <h2 class="section-title">Research Paper</h2>
+                <p class="section-subtitle ds-font">Unearthed Knowledge</p>
+                <div style="margin-top: 3rem;">
+                    <div class="research-msg">Coming Soon</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" class="section">
+            <div class="content-container">
+                <h2 class="section-title">Summon Me</h2>
+                <p class="section-subtitle ds-font">Leave your sign</p>
+                
+                <div class="contact-box">
+                    <div class="contact-item">
+                        <span class="contact-label">Phone</span>
+                        <span class="contact-val">9467216728</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-label">Email</span>
+                        <span class="contact-val">243daksh@gmail.com</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Floating Chat UI (Client-Side Mockup) -->
+    <div class="chat-widget">
+        <div class="chat-window d-none" id="chat-window">
+            <div class="chat-header">
+                <span>AI Guide</span>
+                <span class="close-chat" onclick="toggleChat()">✕</span>
+            </div>
+            <div class="chat-body" id="chat-body">
+                <div class="chat-msg">Welcome, Traveler. I am the AI construct of this domain. Do you need guidance regarding the Chilli Leaf analysis?</div>
+            </div>
+            <form onsubmit="handleChat(event)" class="chat-input-area">
+                <input type="text" id="chat-txt" class="chat-input" placeholder="Speak your mind..." required autocomplete="off">
+                <button type="submit" class="chat-send">Send</button>
+            </form>
+        </div>
+        <button class="chat-btn" onclick="toggleChat()" aria-label="Open Chat">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"></path></svg>
+        </button>
+    </div>
+
+    <script>
+        // --------- Embers Background Animation ---------
+        const canvas = document.getElementById('embers-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let embers = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Ember {
+            constructor() { this.reset(); this.y = Math.random() * height; }
+            reset() {
+                this.x = Math.random() * width; this.y = height + 10;
+                this.size = Math.random() * 2 + 0.5; this.speedX = (Math.random() - 0.5) * 1;
+                this.speedY = -(Math.random() * 2 + 0.5); this.life = Math.random() * 0.5 + 0.3;
+                this.opacity = Math.random() * 0.8 + 0.2; this.decay = Math.random() * 0.005 + 0.002;
+            }
+            update() {
+                this.x += this.speedX + (Math.sin(this.y * 0.05) * 0.5); 
+                this.y += this.speedY; this.opacity -= this.decay;
+                if (this.opacity <= 0 || this.y < -10) this.reset();
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(226, 88, 34, ${this.opacity})`;
+                ctx.shadowBlur = 10; ctx.shadowColor = '#ff7b00'; ctx.fill();
+            }
+        }
+        for (let i = 0; i < 70; i++) embers.push(new Ember());
+        function animateEmbers() {
+            ctx.clearRect(0, 0, width, height);
+            embers.forEach(ember => { ember.update(); ember.draw(); });
+            requestAnimationFrame(animateEmbers);
+        }
+        animateEmbers();
+
+        // --------- Navigation Logic ---------
+        function navTo(sectionId) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick').includes(sectionId)) link.classList.add('active');
+            });
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // --------- Chat UI Widget Logic ---------
+        const chatWindow = document.getElementById('chat-window');
+        const chatBody = document.getElementById('chat-body');
+        const chatTxt = document.getElementById('chat-txt');
+
+        function toggleChat() {
+            chatWindow.classList.toggle('open');
+        }
+
+        function handleChat(e) {
+            e.preventDefault();
+            const text = chatTxt.value.trim();
+            if (!text) return;
+            // Append user msg
+            chatBody.innerHTML += `<div class="chat-msg user">${text}</div>`;
+            chatTxt.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+            
+            // Mock AI response
+            setTimeout(() => {
+                chatBody.innerHTML += `<div class="chat-msg">The flames decipher your words but alas, I am merely an echo. Seek the true Chili Leaf AI via the 'AI Models' tab above for analysis.</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 800);
+        }
+
+        // --------- Chilli Leaf AI Logic & Input Validation ---------
+        const form = document.getElementById('upload-form');
+        const fileInput = document.getElementById('file-input');
+        const fileNameDisplay = document.getElementById('file-name-display');
+        const fileHint = document.getElementById('file-hint');
+        const submitBtn = document.getElementById('submit-btn');
+        const dropArea = document.getElementById('drop-area');
+        const loader = document.getElementById('loader');
+        const resultSection = document.getElementById('result-section');
+        const errorMessage = document.getElementById('error-message');
+        const imagePreview = document.getElementById('image-preview');
+        const resultDisease = document.getElementById('result-disease');
+        const resultConfidence = document.getElementById('result-confidence');
+        const confidenceBar = document.getElementById('confidence-bar');
+
+        let selectedFile = null;
+
+        function getSeverityClass(diseaseName) {
+            const lower = diseaseName.toLowerCase();
+            if (lower.includes('healthy')) return {text: 'status-healthy', bg: 'bg-healthy'};
+            if (lower.includes('nutritional deficiency')) return {text: 'status-warning', bg: 'bg-warning'};
+            return {text: 'status-danger', bg: 'bg-danger'};
+        }
+
+        function showError(msg) {
+            errorMessage.textContent = "The embers scream: // " + msg;
+            errorMessage.style.display = 'block';
+            submitBtn.disabled = true;
+        }
+
+        // Input Validation (Type & Size)
+        function validateFile(file) {
+            errorMessage.style.display = 'none';
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            const maxSize = 5 * 1024 * 1024; // 5 MB
+
+            if (!validTypes.includes(file.type)) {
+                showError("Invalid soul signature. Only JPG and PNG allowed.");
+                return false;
+            }
+            if (file.size > maxSize) {
+                showError("The soul is too heavy. Maximum offering is 5MB.");
+                return false;
+            }
+            return true;
+        }
+
+        function handleFileSelection(file) {
+            if (validateFile(file)) {
+                selectedFile = file;
+                fileNameDisplay.textContent = selectedFile.name;
+                fileHint.textContent = (selectedFile.size / 1024 / 1024).toFixed(2) + ' MB Soul Readied';
+                submitBtn.disabled = false;
+                
+                const reader = new FileReader();
+                reader.onload = (ev) => { imagePreview.src = ev.target.result; }
+                reader.readAsDataURL(selectedFile);
+            } else {
+                resetUploadArea(false); // don't instantly erase error
+            }
+        }
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleFileSelection(e.target.files[0]);
+            else resetUploadArea(true);
+        });
+
+        function resetUploadArea(clearError = true) {
+            selectedFile = null;
+            fileNameDisplay.textContent = "Offer Your Leaf Image";
+            fileHint.textContent = "Drag & Drop or Click (JPG, PNG) Max 5MB";
+            submitBtn.disabled = true;
+            if (clearError) errorMessage.style.display = 'none';
+        }
+
+        // Drag & Drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+        ['dragenter', 'dragover'].forEach(eventName => { dropArea.addEventListener(eventName, () => dropArea.classList.add('dragover'), false); });
+        ['dragleave', 'drop'].forEach(eventName => { dropArea.addEventListener(eventName, () => dropArea.classList.remove('dragover'), false); });
+
+        dropArea.addEventListener('drop', (e) => {
+            if (e.dataTransfer.files.length > 0) handleFileSelection(e.dataTransfer.files[0]);
+        });
+
+        // Form Submit API Handling
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!selectedFile) return;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            form.style.display = 'none';
+            errorMessage.style.display = 'none';
+            resultSection.style.display = 'none';
+            loader.style.display = 'block';
+            confidenceBar.style.width = '0%';
+
+            try {
+                const response = await fetch('/predict', { method: 'POST', body: formData });
+                
+                if (!response.ok) throw new Error("Server communication broken. Check network.");
+                
+                const data = await response.json();
+                loader.style.display = 'none';
+
+                if (data.error) throw new Error(data.error);
+
+                resultDisease.textContent = data.disease;
+                
+                const confValue = parseFloat(data.confidence).toFixed(1);
+                animateValue(resultConfidence, 0, confValue, 1000);
+                
+                const severities = getSeverityClass(data.disease);
+                resultDisease.className = 'disease-name ' + severities.text;
+                confidenceBar.className = 'bar-fill ' + severities.bg;
+                
+                resultSection.style.display = 'block';
+                setTimeout(() => { confidenceBar.style.width = `${confValue}%`; }, 100);
+
+            } catch (err) {
+                loader.style.display = 'none';
+                form.style.display = 'block';
+                showError(err.message || "An arbitrary error occurred. The flame wanes.");
+            }
+        });
+
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = (progress * (end - start) + start).toFixed(1);
+                if (progress < 1) window.requestAnimationFrame(step);
+                else obj.innerHTML = end;
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function resetForm() {
+            form.reset();
+            resetUploadArea(true);
+            resultSection.style.display = 'none';
+            form.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+tensorflow-cpu
+keras
+opencv-python-headless
+numpy
+matplotlib
+scikit-learn
+pillow
+flask
+tqdm
+gunicorn
+ultralytics

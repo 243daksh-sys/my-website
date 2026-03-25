@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: chilli-leaf-ai
+    env: python
+    region: ohio
+    plan: free
+    buildCommand: "pip install -U pip && pip install -r requirements.txt"
+    startCommand: "gunicorn app.app:app --timeout 120"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
