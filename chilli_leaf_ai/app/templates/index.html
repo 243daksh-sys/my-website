@@ -6,28 +6,28 @@
     <!-- SEO Meta Tags -->
     <title>Daksh's Web Portfolio & AI Models</title>
     <meta name="description" content="Daksh's portfolio showcasing web development skills, research papers, and the advanced Chilli Leaf AI disease detection system.">
-    <meta name="keywords" content="Daksh, Portfolio, Web Developer, Chilli Leaf AI, Machine Learning, UI/UX, Dark Souls Theme">
+    <meta name="keywords" content="Daksh, Portfolio, Web Developer, Chilli Leaf AI, Machine Learning, UI/UX, Lush Cave Theme">
     <meta name="author" content="Daksh">
     
-    <!-- Google Fonts for Dark Souls Vibe -->
+    <!-- Google Fonts for Lush Cave Vibe -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --ds-bg-dark: #0a0a0a;
-            --ds-bg-light: #1c1816;
-            --ds-ember: #e25822;         
-            --ds-ember-glow: #ff7b00;  
-            --ds-gold: #cbb581;          
-            --ds-gold-dim: #8b7952;
-            --ds-text: #d4d4d4;          
-            --ds-text-dim: #8a8a8a;
-            --ds-border: rgba(203, 181, 129, 0.2);
-            --ds-panel: rgba(20, 18, 17, 0.85);
+            --ds-bg-dark: #0f1412;
+            --ds-bg-light: #16201d;
+            --ds-firefly: #10b981;         
+            --ds-firefly-glow: #06b6d4;  
+            --ds-gold: #34d399;          
+            --ds-gold-dim: #059669;
+            --ds-text: #f4fdfc;          
+            --ds-text-dim: #99f6e4;
+            --ds-border: rgba(153, 246, 228, 0.2);
+            --ds-panel: rgba(15, 20, 18, 0.85);
 
-            --success: #22c55e;
+            --success: #06b6d4;
             --warning: #f59e0b;
             --danger: #ef4444;
         }
@@ -48,8 +48,8 @@
             line-height: 1.6;
         }
 
-        /* Ember Canvas Background */
-        #embers-canvas {
+        /* Glowworm Canvas Background */
+        #glowworms-canvas {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: 0; pointer-events: none;
@@ -63,8 +63,35 @@
             z-index: 1; pointer-events: none;
         }
 
+        .vine-border-top {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 35vh;
+            background-image: url("{{ url_for('static', filename='cave_vines.png') }}");
+            background-size: cover;
+            background-position: top center;
+            background-repeat: no-repeat;
+            mix-blend-mode: screen;
+            z-index: 2; pointer-events: none;
+            opacity: 0.85;
+            filter: contrast(1.1) brightness(1.2);
+        }
+
+        .vine-border-bottom {
+            position: fixed;
+            bottom: 0; left: 0; width: 100vw; height: 35vh;
+            background-image: url("{{ url_for('static', filename='cave_vines.png') }}");
+            background-size: cover;
+            background-position: bottom center;
+            background-repeat: no-repeat;
+            transform: scaleY(-1);
+            mix-blend-mode: screen;
+            z-index: 2; pointer-events: none;
+            opacity: 0.6;
+            filter: contrast(1.1) brightness(1.2);
+        }
+
         h1, h2, h3, h4, .ds-font {
-            font-family: 'Cinzel', serif;
+            font-family: 'Playfair Display', serif;
             letter-spacing: 2px;
             font-weight: 600;
         }
@@ -86,7 +113,7 @@
         .nav-link {
             color: var(--ds-gold-dim);
             text-decoration: none;
-            font-family: 'Cinzel', serif;
+            font-family: 'Playfair Display', serif;
             font-size: 1rem;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -101,15 +128,15 @@
             position: absolute;
             bottom: 0px; left: 50%;
             width: 0; height: 1px;
-            background-color: var(--ds-ember);
+            background-color: var(--ds-firefly);
             transition: all 0.3s ease;
             transform: translateX(-50%);
-            box-shadow: 0 0 8px var(--ds-ember-glow);
+            box-shadow: 0 0 8px var(--ds-firefly-glow);
         }
 
         .nav-link:hover, .nav-link.active {
             color: var(--ds-gold);
-            text-shadow: 0 0 10px rgba(203, 181, 129, 0.5);
+            text-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
         }
 
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
@@ -148,7 +175,7 @@
             color: var(--ds-gold);
             border: 1px solid var(--ds-border);
             padding: 0.8rem 2rem;
-            font-family: 'Cinzel', serif;
+            font-family: 'Playfair Display', serif;
             font-size: 1.1rem;
             font-weight: 600;
             letter-spacing: 2px;
@@ -168,17 +195,17 @@
         .ds-btn::before {
             content: ''; position: absolute;
             top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(226, 88, 34, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.2), transparent);
             transition: left 0.5s ease;
         }
 
         .ds-btn:hover:not(:disabled)::before { left: 100%; }
 
         .ds-btn:hover:not(:disabled) {
-            border-color: var(--ds-ember);
-            color: var(--ds-ember-glow);
-            box-shadow: 0 0 15px rgba(226, 88, 34, 0.3);
-            text-shadow: 0 0 8px rgba(255, 123, 0, 0.5);
+            border-color: var(--ds-firefly);
+            color: var(--ds-firefly-glow);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+            text-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
         }
 
         .ds-btn:disabled {
@@ -192,7 +219,7 @@
         .hero-title {
             font-size: clamp(2.5rem, 6vw, 4.5rem);
             color: var(--ds-gold);
-            text-shadow: 0 0 20px rgba(203, 181, 129, 0.4);
+            text-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
             margin-bottom: 1rem;
             animation: fadeIn 2s ease forwards;
         }
@@ -202,7 +229,7 @@
             color: var(--ds-text-dim);
             text-transform: lowercase;
             letter-spacing: 3px;
-            font-family: 'Cinzel', serif;
+            font-family: 'Playfair Display', serif;
             animation: fadeIn 3s ease forwards;
             margin-bottom: 2rem;
         }
@@ -214,7 +241,7 @@
             border: 1px solid var(--ds-border);
             border-radius: 4px;
             padding: clamp(1.5rem, 5vw, 3rem);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(203, 181, 129, 0.05);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(52, 211, 153, 0.05);
             max-width: 540px;
             width: 100%;
             margin: 0 auto;
@@ -232,7 +259,7 @@
             font-size: clamp(1.8rem, 5vw, 2.8rem);
             color: var(--ds-gold);
             margin-bottom: 0.5rem;
-            text-shadow: 0 0 15px rgba(203, 181, 129, 0.3);
+            text-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
         }
 
         .section-subtitle {
@@ -255,9 +282,9 @@
         }
 
         .upload-area:hover, .upload-area.dragover {
-            border-color: var(--ds-ember);
-            background: rgba(226, 88, 34, 0.05);
-            box-shadow: inset 0 0 20px rgba(226, 88, 34, 0.1);
+            border-color: var(--ds-firefly);
+            background: rgba(16, 185, 129, 0.05);
+            box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.1);
         }
 
         .upload-area input {
@@ -271,32 +298,32 @@
             transition: color 0.3s, transform 0.3s;
         }
 
-        .upload-area:hover .upload-icon { color: var(--ds-ember); transform: scale(1.1); }
+        .upload-area:hover .upload-icon { color: var(--ds-firefly); transform: scale(1.1); }
 
-        .upload-text { font-size: 1.1rem; color: var(--ds-text); font-family: 'Cinzel', serif; z-index: 1; }
+        .upload-text { font-size: 1.1rem; color: var(--ds-text); font-family: 'Playfair Display', serif; z-index: 1; }
         .upload-subtext { font-size: 0.85rem; color: var(--ds-text-dim); margin-top: 0.5rem; }
 
         /* Loader */
         #loader { display: none; margin: 2rem 0; width: 100%; text-align: center; }
 
-        .bonfire-loader { width: 60px; height: 60px; margin: 0 auto 1rem; position: relative; }
+        .nature-loader { width: 60px; height: 60px; margin: 0 auto 1rem; position: relative; }
 
-        .flame {
-            position: absolute; bottom: 0; width: 20px; height: 40px;
-            background: var(--ds-ember); border-radius: 50% 50% 20% 20%;
-            box-shadow: 0 0 20px var(--ds-ember-glow); animation: flicker 1s infinite alternate;
+        .spore {
+            position: absolute; bottom: 10px; width: 15px; height: 15px;
+            background: var(--ds-firefly); border-radius: 50%;
+            box-shadow: 0 0 15px var(--ds-firefly-glow); animation: float-pulse 1.5s infinite alternate ease-in-out;
         }
         
-        .flame-left { left: 10px; height: 30px; animation-delay: 0.2s; }
-        .flame-right { right: 10px; height: 35px; animation-delay: 0.5s; background: var(--ds-gold); }
-        .flame-main { left: 20px; height: 50px; z-index: 2; background: #ff4500; }
+        .spore-left { left: 5px; animation-delay: 0s; }
+        .spore-right { right: 5px; animation-delay: 0.5s; background: var(--ds-gold); }
+        .spore-main { left: 22px; bottom: 20px; width: 20px; height: 20px; z-index: 2; background: #10b981; animation-delay: 0.2s; }
 
-        @keyframes flicker {
-            0% { transform: scaleY(1) translateY(0); opacity: 0.8; }
-            100% { transform: scaleY(1.2) translateY(-5px); opacity: 1; }
+        @keyframes float-pulse {
+            0% { transform: translateY(0) scale(0.8); opacity: 0.6; }
+            100% { transform: translateY(-15px) scale(1.2); opacity: 1; box-shadow: 0 0 25px var(--ds-firefly-glow); }
         }
 
-        .loader-text { color: var(--ds-gold); font-family: 'Cinzel', serif; letter-spacing: 2px; animation: pulse-glow 2s infinite; }
+        .loader-text { color: var(--ds-gold); font-family: 'Playfair Display', serif; letter-spacing: 2px; animation: pulse-glow 2s infinite; }
 
         /* Results */
         #result-section { display: none; animation: fadeIn 0.8s ease; width: 100%; }
@@ -312,7 +339,7 @@
             padding: 1.5rem; margin-bottom: 1.5rem; text-align: left;
         }
 
-        .disease-name { font-size: clamp(1.4rem, 4vw, 1.8rem); color: var(--ds-gold); font-family: 'Cinzel', serif; margin-bottom: 1rem; text-align: center; }
+        .disease-name { font-size: clamp(1.4rem, 4vw, 1.8rem); color: var(--ds-gold); font-family: 'Playfair Display', serif; margin-bottom: 1rem; text-align: center; }
 
         .conf-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--ds-text-dim); text-transform: uppercase; letter-spacing: 1px; }
         .conf-val { color: var(--ds-text); font-weight: 600; }
@@ -322,9 +349,9 @@
 
         /* Error */
         .error-msg {
-            color: var(--ds-ember); padding: 1rem; border: 1px solid var(--ds-ember);
-            background: rgba(226, 88, 34, 0.1); margin-bottom: 1.5rem; display: none;
-            font-family: 'Cinzel', serif; letter-spacing: 1px; width: 100%; text-align: center;
+            color: var(--ds-firefly); padding: 1rem; border: 1px solid var(--ds-firefly);
+            background: rgba(16, 185, 129, 0.1); margin-bottom: 1.5rem; display: none;
+            font-family: 'Playfair Display', serif; letter-spacing: 1px; width: 100%; text-align: center;
         }
 
         /* ------------- Skills Section ------------- */
@@ -343,15 +370,15 @@
             background: var(--ds-gold); transition: all 0.3s ease; transform: translateX(-50%);
         }
 
-        .skill-card:hover { background: rgba(203, 181, 129, 0.05); border-color: var(--ds-gold-dim); transform: translateY(-3px); }
+        .skill-card:hover { background: rgba(52, 211, 153, 0.05); border-color: var(--ds-gold-dim); transform: translateY(-3px); }
         .skill-card:hover::after { width: 100%; box-shadow: 0 0 15px var(--ds-gold); }
 
-        .skill-name { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--ds-text); letter-spacing: 1px; }
+        .skill-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ds-text); letter-spacing: 1px; }
 
         /* ------------- Research & Contact Sections ------------- */
         .research-msg {
             font-size: clamp(1.8rem, 5vw, 3rem); color: var(--ds-gold-dim); text-transform: uppercase;
-            letter-spacing: 8px; opacity: 0.6; text-shadow: 0 0 20px rgba(139, 121, 82, 0.2); font-family: 'Cinzel', serif;
+            letter-spacing: 8px; opacity: 0.6; text-shadow: 0 0 20px rgba(5, 150, 105, 0.2); font-family: 'Playfair Display', serif;
         }
 
         .contact-box {
@@ -367,9 +394,9 @@
         .contact-box::after { top: auto; bottom: -15px; }
 
         .contact-item { margin: 1.5rem 0; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: center; }
-        .contact-label { font-family: 'Cinzel', serif; color: var(--ds-gold-dim); text-transform: uppercase; letter-spacing: 2px; }
+        .contact-label { font-family: 'Playfair Display', serif; color: var(--ds-gold-dim); text-transform: uppercase; letter-spacing: 2px; }
         .contact-val { font-size: clamp(1.1rem, 3vw, 1.5rem); color: var(--ds-text); font-weight: 300; letter-spacing: 1px; transition: color 0.3s; }
-        .contact-val:hover { color: var(--ds-gold); text-shadow: 0 0 10px rgba(203, 181, 129, 0.5); }
+        .contact-val:hover { color: var(--ds-gold); text-shadow: 0 0 10px rgba(52, 211, 153, 0.5); }
 
         /* ------------- Floating Chat UI ------------- */
         .chat-widget {
@@ -398,29 +425,29 @@
 
         .chat-header {
             background: rgba(0,0,0,0.6); padding: 1rem; border-bottom: 1px solid var(--ds-border);
-            font-family: 'Cinzel', serif; color: var(--ds-gold); display: flex; justify-content: space-between; align-items: center;
+            font-family: 'Playfair Display', serif; color: var(--ds-gold); display: flex; justify-content: space-between; align-items: center;
         }
         
         .close-chat { cursor: pointer; color: var(--ds-text-dim); }
-        .close-chat:hover { color: var(--ds-ember); }
+        .close-chat:hover { color: var(--ds-firefly); }
 
         .chat-body { padding: 1.5rem 1rem; height: 200px; overflow-y: auto; color: var(--ds-text-dim); font-size: 0.9rem; }
         .chat-msg { margin-bottom: 10px; background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 4px; border-left: 2px solid var(--ds-gold-dim); }
-        .chat-msg.user { background: rgba(203,181,129,0.1); border-left: none; border-right: 2px solid var(--ds-gold); text-align: right; color: var(--ds-text); }
+        .chat-msg.user { background: rgba(52,211,153,0.1); border-left: none; border-right: 2px solid var(--ds-gold); text-align: right; color: var(--ds-text); }
 
         .chat-input-area { display: flex; border-top: 1px solid var(--ds-border); }
         .chat-input { flex: 1; min-height: 48px; background: transparent; border: none; padding: 0 1rem; color: var(--ds-text); font-family: 'Inter', sans-serif; outline: none; }
-        .chat-send { background: rgba(203,181,129,0.1); border: none; padding: 0 1rem; color: var(--ds-gold); cursor: pointer; font-family: 'Cinzel', serif; transition: background 0.2s; min-height: 48px; }
-        .chat-send:hover { background: rgba(203,181,129,0.2); }
+        .chat-send { background: rgba(52,211,153,0.1); border: none; padding: 0 1rem; color: var(--ds-gold); cursor: pointer; font-family: 'Playfair Display', serif; transition: background 0.2s; min-height: 48px; }
+        .chat-send:hover { background: rgba(52,211,153,0.2); }
 
         /* Utils */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse-glow { 0%, 100% { text-shadow: 0 0 5px rgba(203,181,129,0.2); } 50% { text-shadow: 0 0 20px rgba(203,181,129,0.8), 0 0 30px rgba(226,88,34,0.6); } }
+        @keyframes pulse-glow { 0%, 100% { text-shadow: 0 0 5px rgba(52,211,153,0.2); } 50% { text-shadow: 0 0 20px rgba(52,211,153,0.8), 0 0 30px rgba(16,185,129,0.6); } }
 
         /* Status Colors */
         .status-danger { color: var(--danger); text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
         .status-warning { color: var(--warning); text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
-        .status-healthy { color: var(--ds-gold); text-shadow: 0 0 10px rgba(203, 181, 129, 0.5); }
+        .status-healthy { color: var(--ds-gold); text-shadow: 0 0 10px rgba(52, 211, 153, 0.5); }
         
         .bg-danger { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
         .bg-warning { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
@@ -438,9 +465,11 @@
 </head>
 <body>
 
-    <!-- Embers Background -->
-    <canvas id="embers-canvas"></canvas>
+    <!-- Glowworms Background -->
+    <canvas id="glowworms-canvas"></canvas>
     <div class="overlay"></div>
+    <div class="vine-border-top"></div>
+    <div class="vine-border-bottom"></div>
 
     <!-- Navigation -->
     <nav>
@@ -459,7 +488,7 @@
             <div class="content-container">
                 <h1 class="hero-title">HI I am Daksh</h1>
                 <p class="hero-subtitle">this website showcases my projects</p>
-                <button class="ds-btn" style="margin-top: 1rem;" onclick="navTo('projects')">Behold the Chilli Leaf AI</button>
+                <button class="ds-btn" style="margin-top: 1rem;" onclick="navTo('projects')">Delve into the Chilli Leaf AI</button>
             </div>
         </section>
 
@@ -467,7 +496,7 @@
         <section id="projects" class="section">
             <div class="content-container">
                 <h2 class="section-title">Chilli Leaf AI</h2>
-                <p class="section-subtitle ds-font">Uncover the blight that afflicts your crops</p>
+                <p class="section-subtitle ds-font">Discover the health of your crops</p>
                 
                 <div class="panel">
                     <div class="error-msg" id="error-message"></div>
@@ -477,29 +506,29 @@
                             <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path>
                             </svg>
-                            <div class="upload-text" id="file-name-display">Offer Your Leaf Image</div>
+                            <div class="upload-text" id="file-name-display">Upload Your Leaf Image</div>
                             <div class="upload-subtext" id="file-hint">Drag & Drop or Click (JPG, PNG) Max 5MB</div>
                             <input type="file" name="file" id="file-input" accept="image/jpeg, image/png, image/jpg" required>
                         </div>
-                        <button type="submit" class="ds-btn ds-btn-block" id="submit-btn" disabled>Kindle The Flame (Analyze)</button>
+                        <button type="submit" class="ds-btn ds-btn-block" id="submit-btn" disabled>Analyze Leaf</button>
                     </form>
 
                     <div id="loader">
-                        <div class="bonfire-loader">
-                            <div class="flame flame-left"></div>
-                            <div class="flame flame-right"></div>
-                            <div class="flame flame-main"></div>
+                        <div class="nature-loader">
+                            <div class="spore spore-left"></div>
+                            <div class="spore spore-right"></div>
+                            <div class="spore spore-main"></div>
                         </div>
-                        <p class="loader-text ds-font">Gazing into the embers... Loading Image Data</p>
+                        <p class="loader-text ds-font">Gazing into the glowworms... Loading Image Data</p>
                     </div>
 
                     <div id="result-section">
-                        <img id="image-preview" src="" alt="Offered Leaf" class="image-preview">
+                        <img id="image-preview" src="" alt="Uploaded Leaf" class="image-preview">
                         
                         <div class="result-box">
                             <div class="disease-name" id="result-disease">Disease Name</div>
                             <div class="conf-row">
-                                <span>Soul resonance (Confidence)</span>
+                                <span>Confidence</span>
                                 <span class="conf-val"><span id="result-confidence">0</span>%</span>
                             </div>
                             <div class="bar-bg">
@@ -507,7 +536,7 @@
                             </div>
                         </div>
                         
-                        <button class="ds-btn ds-btn-block" onclick="resetForm()">Offer Another Soul</button>
+                        <button class="ds-btn ds-btn-block" onclick="resetForm()">Analyze Another Leaf</button>
                     </div>
                 </div>
             </div>
@@ -516,8 +545,8 @@
         <!-- Skills -->
         <section id="skills" class="section">
             <div class="content-container">
-                <h2 class="section-title">Arsenal of Skills</h2>
-                <p class="section-subtitle ds-font">The mastery required to forge the web</p>
+                <h2 class="section-title">My Skills</h2>
+                <p class="section-subtitle ds-font">The tools I use to build the web</p>
                 
                 <div class="skills-grid">
                     <div class="skill-card"><div class="skill-name">HTML & CSS</div></div>
@@ -537,7 +566,7 @@
         <section id="research" class="section">
             <div class="content-container">
                 <h2 class="section-title">Research Paper</h2>
-                <p class="section-subtitle ds-font">Unearthed Knowledge</p>
+                <p class="section-subtitle ds-font">Research & Discovery</p>
                 <div style="margin-top: 3rem;">
                     <div class="research-msg">Coming Soon</div>
                 </div>
@@ -547,8 +576,8 @@
         <!-- Contact -->
         <section id="contact" class="section">
             <div class="content-container">
-                <h2 class="section-title">Summon Me</h2>
-                <p class="section-subtitle ds-font">Leave your sign</p>
+                <h2 class="section-title">Contact Me</h2>
+                <p class="section-subtitle ds-font">Get in touch</p>
                 
                 <div class="contact-box">
                     <div class="contact-item">
@@ -573,7 +602,7 @@
                 <span class="close-chat" onclick="toggleChat()">✕</span>
             </div>
             <div class="chat-body" id="chat-body">
-                <div class="chat-msg">Welcome, Traveler. I am the AI construct of this domain. Do you need guidance regarding the Chilli Leaf analysis?</div>
+                <div class="chat-msg">Welcome, Traveler. I am the Cave Spirit of this domain. Do you seek guidance regarding the Chilli Leaf analysis?</div>
             </div>
             <form onsubmit="handleChat(event)" class="chat-input-area">
                 <input type="text" id="chat-txt" class="chat-input" placeholder="Speak your mind..." required autocomplete="off">
@@ -586,11 +615,11 @@
     </div>
 
     <script>
-        // --------- Embers Background Animation ---------
-        const canvas = document.getElementById('embers-canvas');
+        // --------- Glowworms Background Animation ---------
+        const canvas = document.getElementById('glowworms-canvas');
         const ctx = canvas.getContext('2d');
         let width, height;
-        let embers = [];
+        let glowworms = [];
 
         function resize() {
             width = canvas.width = window.innerWidth;
@@ -600,7 +629,7 @@
         window.addEventListener('resize', resize);
         resize();
 
-        class Ember {
+        class Glowworm {
             constructor() { this.reset(); this.y = Math.random() * height; }
             reset() {
                 this.x = Math.random() * width; this.y = height + 10;
@@ -615,17 +644,17 @@
             }
             draw() {
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(226, 88, 34, ${this.opacity})`;
-                ctx.shadowBlur = 10; ctx.shadowColor = '#ff7b00'; ctx.fill();
+                ctx.fillStyle = `rgba(16, 185, 129, ${this.opacity})`;
+                ctx.shadowBlur = 10; ctx.shadowColor = '#06b6d4'; ctx.fill();
             }
         }
-        for (let i = 0; i < 70; i++) embers.push(new Ember());
-        function animateEmbers() {
+        for (let i = 0; i < 70; i++) glowworms.push(new Glowworm());
+        function animateGlowworms() {
             ctx.clearRect(0, 0, width, height);
-            embers.forEach(ember => { ember.update(); ember.draw(); });
-            requestAnimationFrame(animateEmbers);
+            glowworms.forEach(firefly => { firefly.update(); firefly.draw(); });
+            requestAnimationFrame(animateGlowworms);
         }
-        animateEmbers();
+        animateGlowworms();
 
         // --------- Navigation Logic ---------
         function navTo(sectionId) {
@@ -657,7 +686,7 @@
             
             // Mock AI response
             setTimeout(() => {
-                chatBody.innerHTML += `<div class="chat-msg">The flames decipher your words but alas, I am merely an echo. Seek the true Chili Leaf AI via the 'AI Models' tab above for analysis.</div>`;
+                chatBody.innerHTML += `<div class="chat-msg">The spores decipher your words but alas, I am merely an echo. Seek the true Chili Leaf AI via the 'AI Models' tab above for analysis.</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
             }, 800);
         }
@@ -687,7 +716,7 @@
         }
 
         function showError(msg) {
-            errorMessage.textContent = "The embers scream: // " + msg;
+            errorMessage.textContent = "The glowworms scream: // " + msg;
             errorMessage.style.display = 'block';
             submitBtn.disabled = true;
         }
@@ -699,11 +728,11 @@
             const maxSize = 5 * 1024 * 1024; // 5 MB
 
             if (!validTypes.includes(file.type)) {
-                showError("Invalid soul signature. Only JPG and PNG allowed.");
+                showError("Invalid leaf signature. Only JPG and PNG allowed.");
                 return false;
             }
             if (file.size > maxSize) {
-                showError("The soul is too heavy. Maximum offering is 5MB.");
+                showError("The image is too large. Maximum size is 5MB.");
                 return false;
             }
             return true;
@@ -713,7 +742,7 @@
             if (validateFile(file)) {
                 selectedFile = file;
                 fileNameDisplay.textContent = selectedFile.name;
-                fileHint.textContent = (selectedFile.size / 1024 / 1024).toFixed(2) + ' MB Soul Readied';
+                fileHint.textContent = (selectedFile.size / 1024 / 1024).toFixed(2) + ' MB Leaf Readied';
                 submitBtn.disabled = false;
                 
                 const reader = new FileReader();
@@ -731,7 +760,7 @@
 
         function resetUploadArea(clearError = true) {
             selectedFile = null;
-            fileNameDisplay.textContent = "Offer Your Leaf Image";
+            fileNameDisplay.textContent = "Upload Your Leaf Image";
             fileHint.textContent = "Drag & Drop or Click (JPG, PNG) Max 5MB";
             submitBtn.disabled = true;
             if (clearError) errorMessage.style.display = 'none';
@@ -787,7 +816,7 @@
             } catch (err) {
                 loader.style.display = 'none';
                 form.style.display = 'block';
-                showError(err.message || "An arbitrary error occurred. The flame wanes.");
+                showError(err.message || "An arbitrary error occurred. The spore wanes.");
             }
         });
 
