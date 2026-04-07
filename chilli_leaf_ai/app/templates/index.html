@@ -13,23 +13,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Three.js for 3D Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <style>
         :root {
-            --ds-bg-dark: #0f1412;
-            --ds-bg-light: #16201d;
-            --ds-firefly: #10b981;         
-            --ds-firefly-glow: #06b6d4;  
-            --ds-gold: #34d399;          
-            --ds-gold-dim: #059669;
-            --ds-text: #f4fdfc;          
-            --ds-text-dim: #99f6e4;
-            --ds-border: rgba(153, 246, 228, 0.2);
-            --ds-panel: rgba(15, 20, 18, 0.85);
+            --ds-bg-dark: #e8e3d6;    /* Creamy off-white paper color */
+            --ds-bg-light: #c8d3c2;   /* Muted pale green sky */
+            --ds-firefly: #f15a24;    /* Burnt orange */
+            --ds-firefly-glow: #e28743;  /* Warmer orange/yellow */
+            --ds-gold: #1b504f;       /* Deep mountain teal for active text */
+            --ds-gold-dim: #3a6858;   /* Forest mountain green */
+            --ds-text: #1a2322;       /* Near black for readability */
+            --ds-text-dim: #4a5c54;   /* Muted dark green */
+            --ds-border: rgba(27, 80, 79, 0.2);
+            --ds-panel: rgba(232, 227, 214, 0.85);
 
-            --success: #06b6d4;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --success: #2980b9;
+            --warning: #d35400;
+            --danger: #c0392b;
         }
 
         * {
@@ -41,6 +43,11 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--ds-bg-dark);
+            background-image: url("{{ url_for('static', filename='SKIBIIDI.avif') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             color: var(--ds-text);
             min-height: 100vh;
             overflow: hidden; 
@@ -48,47 +55,9 @@
             line-height: 1.6;
         }
 
-        /* Glowworm Canvas Background */
-        #glowworms-canvas {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 0; pointer-events: none;
-            background: radial-gradient(circle at center, var(--ds-bg-light) 0%, var(--ds-bg-dark) 100%);
-        }
+        /* UI Overlays removed for bright landscape background */
 
-        .overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1; pointer-events: none;
-        }
-
-        .vine-border-top {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 35vh;
-            background-image: url("{{ url_for('static', filename='cave_vines.png') }}");
-            background-size: cover;
-            background-position: top center;
-            background-repeat: no-repeat;
-            mix-blend-mode: screen;
-            z-index: 2; pointer-events: none;
-            opacity: 0.85;
-            filter: contrast(1.1) brightness(1.2);
-        }
-
-        .vine-border-bottom {
-            position: fixed;
-            bottom: 0; left: 0; width: 100vw; height: 35vh;
-            background-image: url("{{ url_for('static', filename='cave_vines.png') }}");
-            background-size: cover;
-            background-position: bottom center;
-            background-repeat: no-repeat;
-            transform: scaleY(-1);
-            mix-blend-mode: screen;
-            z-index: 2; pointer-events: none;
-            opacity: 0.6;
-            filter: contrast(1.1) brightness(1.2);
-        }
+        /* 3D Vines handle the borders now */
 
         h1, h2, h3, h4, .ds-font {
             font-family: 'Playfair Display', serif;
@@ -465,11 +434,7 @@
 </head>
 <body>
 
-    <!-- Glowworms Background -->
-    <canvas id="glowworms-canvas"></canvas>
-    <div class="overlay"></div>
-    <div class="vine-border-top"></div>
-    <div class="vine-border-bottom"></div>
+    <!-- 3D Landscape Canvas will be appended here by Three.js -->
 
     <!-- Navigation -->
     <nav>
@@ -615,46 +580,7 @@
     </div>
 
     <script>
-        // --------- Glowworms Background Animation ---------
-        const canvas = document.getElementById('glowworms-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        let glowworms = [];
-
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Glowworm {
-            constructor() { this.reset(); this.y = Math.random() * height; }
-            reset() {
-                this.x = Math.random() * width; this.y = height + 10;
-                this.size = Math.random() * 2 + 0.5; this.speedX = (Math.random() - 0.5) * 1;
-                this.speedY = -(Math.random() * 2 + 0.5); this.life = Math.random() * 0.5 + 0.3;
-                this.opacity = Math.random() * 0.8 + 0.2; this.decay = Math.random() * 0.005 + 0.002;
-            }
-            update() {
-                this.x += this.speedX + (Math.sin(this.y * 0.05) * 0.5); 
-                this.y += this.speedY; this.opacity -= this.decay;
-                if (this.opacity <= 0 || this.y < -10) this.reset();
-            }
-            draw() {
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(16, 185, 129, ${this.opacity})`;
-                ctx.shadowBlur = 10; ctx.shadowColor = '#06b6d4'; ctx.fill();
-            }
-        }
-        for (let i = 0; i < 70; i++) glowworms.push(new Glowworm());
-        function animateGlowworms() {
-            ctx.clearRect(0, 0, width, height);
-            glowworms.forEach(firefly => { firefly.update(); firefly.draw(); });
-            requestAnimationFrame(animateGlowworms);
-        }
-        animateGlowworms();
+        // Glowworms script removed in favor of Abstract Parallax Theme
 
         // --------- Navigation Logic ---------
         function navTo(sectionId) {
@@ -839,5 +765,7 @@
             form.style.display = 'block';
         }
     </script>
+
+    <!-- Background handled by CSS -->
 </body>
 </html>

@@ -1,6 +1,7 @@
 import os
 import cv2
 import shutil
+import numpy as np
 from ultralytics import YOLO, YOLOWorld
 from predict import predict_image
 
@@ -8,7 +9,7 @@ from predict import predict_image
 INPUT_IMAGE_PATH = 'test.jpg'  # Replace with your input image
 OUTPUT_IMAGE_PATH = 'labeled_output.jpg'
 TEMP_CROP_DIR = 'temp_leaves'
-YOLO_MODEL_PATH = 'yolov8s-world.pt'  # Using YOLOWorld for zero-shot 'leaf' detection
+YOLO_MODEL_PATH = r'E:\Projects\runs\detect\chilli_leaf_yolo4\weights\best.pt'  # Custom trained model
 # =================================================
 
 # Colors in BGR format for OpenCV
@@ -27,7 +28,7 @@ def main():
         if 'world' in YOLO_MODEL_PATH.lower():
             # YOLOWorld supports open-vocabulary detection without custom training
             yolo_model = YOLOWorld(YOLO_MODEL_PATH)
-            yolo_model.set_classes(["leaf"])
+            yolo_model.set_classes(["leaf", "plant leaf"])
         else:
             yolo_model = YOLO(YOLO_MODEL_PATH)
     except Exception as e:
@@ -46,22 +47,55 @@ def main():
         return
 
     print("[STAGE 1] Running leaf detection...")
-    # conf=0.25 is a standard confidence threshold, adjust as needed
-    results = yolo_model(image, conf=0.25)
+    # Using conf=0.20 and iou=0.60 to detect multiple overlapping dense leaves
+    results = yolo_model(image, conf=0.20, iou=0.60)
 
     # YOLO results is a list per image; we only passed one image
     result = results[0]
     boxes = result.boxes
 
-    print(f"[INFO] Detected {len(boxes)} potential leaves.")
+    print(f"[INFO] YOLO detected {len(boxes)} potential leaves.")
+
+    # ---------------------------------------------------------
+    # OpenCV Fallback (If YOLO finds 0 leaves)
+    # ---------------------------------------------------------
+    extracted_boxes = []
+    if len(boxes) == 0:
+        print("[WARNING] Zero-shot YOLO failed to segment the dense leaves.")
+        print("[INFO] Falling back to OpenCV Color & Contour Detection...")
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        
+        # Define range of green color in HSV spaces
+        lower_green = np.array([25, 40, 40])
+        upper_green = np.array([95, 255, 255])
+        mask = cv2.inRange(hsv, lower_green, upper_green)
+        
+        # Morphological operations to remove noise
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=1)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
+
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        
+        for cnt in contours:
+            x_min, y_min, w, h = cv2.boundingRect(cnt)
+            # Filter for reasonably sized leaves (avoid tiny noise spots)
+            if w > 100 and h > 100:
+                extracted_boxes.append((x_min, y_min, x_min + w, y_min + h))
+                
+        print(f"[INFO] OpenCV fallback detected {len(extracted_boxes)} potential leaves.")
+    else:
+        for box in boxes:
+            x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
+            extracted_boxes.append((x1, y1, x2, y2))
 
     health_counts = {}
     total_analyzed = 0
 
     # Process each detected bounding box
-    for i, box in enumerate(boxes):
+    for i, bbox in enumerate(extracted_boxes):
         # Extract bounding box coordinates
-        x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
+        x1, y1, x2, y2 = bbox
 
         # ---------------------------------------------------------
         # Extraction Stage

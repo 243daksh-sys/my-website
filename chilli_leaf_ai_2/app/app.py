@@ -3,9 +3,8 @@ import sys
 from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 
-# Add parent directory to path to import predict.py
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from predict import predict_image
+# Import pipeline helper instead of predict.py
+from pipeline_helper import process_image_pipeline
 
 app = Flask(__name__)
 
@@ -43,18 +42,11 @@ def predict():
         
         try:
             # Predict
-            disease_name, confidence, _ = predict_image(file_path)
-            
-            # Format display name
-            display_name = disease_name.replace('_', ' ').title()
+            result_data = process_image_pipeline(file_path, app.config['UPLOAD_FOLDER'])
+            result_data['success'] = True
             
             # Return prediction result
-            return jsonify({
-                'success': True,
-                'disease': display_name,
-                'confidence': confidence,
-                'image_url': f'/static/uploads/{filename}'
-            })
+            return jsonify(result_data)
         except Exception as e:
             return jsonify({'error': str(e)})
             
